@@ -20,6 +20,7 @@ export class AuthorizeController {
       return 'Failed';
     }
   }
+  
   @Post('/create')
   create() {
     return this.authorizeService.createUser();
