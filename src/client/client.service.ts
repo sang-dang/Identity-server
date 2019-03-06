@@ -1,8 +1,7 @@
+import { ClientKey } from './../shared/model/client';
 import { Injectable, Inject } from '@nestjs/common';
 import { ClientEntity } from './client.entity';
-import { UserRegister, PasswordChange, Login } from 'shared/model/user';
-import { ResponseData } from 'shared/model/response';
-import { ClientInfo } from 'shared/model/client';
+import { ClientRegister } from 'shared/model/client';
 
 @Injectable()
 
@@ -12,73 +11,34 @@ export class ClientService {
     ) {
 
     }
-    public async add(data: UserRegister): Promise<ResponseData> {
-        let user = await this.clientRepository.findOne({ where : {: data.email} });
-        if (user) {
-            return {
-                isSuccessfully: false,
-                message: 'User already exists',
-            };
-        }
-        if (data.password !== data.retypePassword) {
-            return {
-                isSuccessfully: false,
-                message: 'Retype password is not match',
-            };
-        }
-        user = new ClientInfo();
-        user.fullname = data.fullname;
-        user.email = data.email;
-        user.password = data.password;
-        await user.save().catch(err => {
-            return {
-                isSuccessfully: false,
-                message: 'Register failed',
-            };
-        });
-        return {
-            isSuccessfully: true,
-            message: 'Successfully',
-        };
+
+    public async get(clientId: number) {
+        return await this.clientRepository.findOne({ where : {client_id: clientId} });
     }
 
-    public async changePassword(data: PasswordChange): Promise<boolean> {
-        const user = await this.clientRepository.findOne({ where : {email: data.email} });
-        if (data.newPassword !== data.retypePassword) {
-            return false;
+    public async add(data: ClientRegister): Promise<any> {
+        let client = await this.clientRepository.findOne({ where : {client_id: data.homepage} });
+        if (client) {
+            return;
         }
-        if (user.password === data.oldPassword) {
-            await this.clientRepository.update({
-                password: data.newPassword,
-            },
-            {
-                where: {
-                    email: data.email,
-                },
-            });
-            return true;
-        }
+        const key: ClientKey = this.generateKey();
+        client = new ClientEntity();
+        client.name = data.name;
+        client.homepage = data.homepage;
+        client.description = data.description;
+        client.redirect_uri = data.redirect_uri;
+        client.client_id = key.client_id;
+        client.client_secret = key.client_secret;
+        await client.save();
+        return key;
     }
 
-    public async delete(data: Login): Promise<boolean> {
-        const user = await this.clientRepository.findOne({ where : {email: data.email} });
-        if (user && user.password === data.password) {
-            await this.userRepository.destroy({
-                where: {email: user.email},
-            });
-            return true;
-        }
-        return false;
-    }
-
-    public async login(login: Login, clientInfo: ClientInfo) {
-        const user = await this.userRepository.findOne({ where : {email: login.email} });
-        if (user && user.password === login.password) {
-            await this.userRepository.destroy({
-                where: {email: user.email},
-            });
-            return true;
-        }
-        return false;
+    public generateKey(): ClientKey {
+        const random = new Date();
+        const miliseconds = random.getUTCMilliseconds();
+        const key = new ClientKey();
+        key.client_id = miliseconds;
+        key.client_secret = miliseconds;
+        return key;
     }
 }

@@ -17,4 +17,7 @@ export class User extends Model<User>{
 
   @Column
   password: string;
+
+  @Column
+  access_token: string;
 }

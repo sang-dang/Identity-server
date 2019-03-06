@@ -45,9 +45,9 @@ export class UserController {
 
   @Post('login')
   async login(@Body() body: Login,  @Query() client: ClientInfo, @Res() res) {
-    await this._userService.login(body, client).then(isSuccess => {
-      if (isSuccess) {
-        res.status(HttpStatus.OK).end('Successfully');
+    await this._userService.login(body, client).then(token => {
+      if (token) {
+        res.redirect();
       }
       res.status(HttpStatus.BAD_REQUEST).end('Failed');
     });

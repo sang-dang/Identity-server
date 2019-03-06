@@ -1,5 +1,5 @@
 import { ApiModelProperty } from '@nestjs/swagger';
-import { IsString, IsUrl, IsEnum, Length } from 'class-validator';
+import { IsString, IsUrl, IsEnum, Length, IsNotEmpty, IsNumber } from 'class-validator';
 
 export class ClientInfo {
     @ApiModelProperty()
@@ -7,8 +7,8 @@ export class ClientInfo {
     response_type: string;
 
     @ApiModelProperty()
-    @IsString()
-    client_id: string;
+    @IsNumber()
+    client_id: number;
 
     @ApiModelProperty()
     @IsUrl()
@@ -22,4 +22,30 @@ export class ClientInfo {
     @IsString()
     @Length(10, 10)
     state: string;
+}
+
+export class ClientRegister {
+    @ApiModelProperty()
+    @IsString()
+    @IsNotEmpty()
+    name: string;
+
+    @ApiModelProperty()
+    @IsString()
+    @IsNotEmpty()
+    homepage: string;
+
+    @ApiModelProperty()
+    @IsUrl()
+    @IsNotEmpty()
+    redirect_uri: string;
+
+    @ApiModelProperty()
+    @IsString()
+    description: string;
+}
+
+export class ClientKey {
+    client_id: number;
+    client_secret: number;
 }

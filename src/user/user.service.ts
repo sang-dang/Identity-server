@@ -1,3 +1,4 @@
+import { ClientService } from './../client/client.service';
 import { Injectable, Inject } from '@nestjs/common';
 import { User } from './user.entity';
 import { UserRegister, PasswordChange, Login } from 'shared/model/user';
@@ -9,6 +10,7 @@ import { ClientInfo } from 'shared/model/client';
 export class UserService {
     constructor(
         @Inject('UserRepository') private readonly userRepository: typeof User,
+        // private _clientService: ClientService,
     ) {
 
     }
@@ -73,16 +75,27 @@ export class UserService {
 
     public async login(login: Login, clientInfo: ClientInfo) {
         const user = await this.userRepository.findOne({ where : {email: login.email} });
-        if (user && user.password === login.password) {
-            await this.userRepository.destroy({
-                where: {email: user.email},
-            });
-            return true;
+        if (!user && user.password !== login.password) {
+            return;
         }
-        return false;
+        // if (this.validateClient(clientInfo.client_id)) {
+        //     const token = this.generateAccessToken(user.email);
+        //     return token;
+        // }
     }
 
-    public validateClient(client: ClientInfo) {
-        
+    public generateAccessToken(emailInfo: string): string {
+        const token = 'asda21312';
+        this.userRepository.update({
+            access_token: token,
+        },
+        {
+            where: { email: emailInfo },
+        });
+        return token;
+    }
+
+    public validateClient(clientId: number) {
+        // return this._clientService.get(clientId);
     }
 }

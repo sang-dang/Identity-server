@@ -6,16 +6,24 @@ export class ClientEntity extends Model<ClientEntity> {
     @PrimaryKey
     @Column
     id: number;
-    response_type: string;
 
     @Column
-    client_id: string;
+    name: string;
+
+    @Column
+    homepage: string;
+
+    @Column
+    description: string;
 
     @Column
     redirect_uri: string;
 
     @Column
-    scope: string;
+    client_id: number;
+
+    @Column
+    client_secret: number;
 
     @Column
     state: string;

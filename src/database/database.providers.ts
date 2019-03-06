@@ -1,6 +1,6 @@
+import { Sequelize } from 'sequelize-typescript';
 import { ClientEntity } from './../client/client.entity';
 import { User } from './../user/user.entity';
-import { Sequelize } from 'sequelize-typescript';
 import { Authorize, Credential } from '../authorize/authorize.entity';
 
 export const databaseProviders = [
