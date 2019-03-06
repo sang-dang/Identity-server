@@ -15,7 +15,7 @@ export class UserController {
 
   @Post('register')
   async register(@Body() body, @Res() res) {
-    this._userService.add(body).then(data => {
+    this._userService.signUp(body).then(data => {
       if (data.isSuccessfully) {
         res.status(HttpStatus.OK).end(data.message);
       }
@@ -45,9 +45,19 @@ export class UserController {
 
   @Post('login')
   async login(@Body() body: Login,  @Query() client: ClientInfo, @Res() res) {
-    await this._userService.login(body, client).then(isSuccess => {
+    await this._userService.login(body, client).then(data => {
+      if (data) {
+        res.status(HttpStatus.MOVED_PERMANENTLY).end('https://myside/callback?access_token=' + data);
+      }
+      res.status(HttpStatus.BAD_REQUEST).end('Failed');
+    });
+  }
+
+  @Post('reset-password')
+  async resetPassword(@Body() body: any, @Res() res) {
+    await this._userService.resetPassword(body.email).then(isSuccess => {
       if (isSuccess) {
-        res.status(HttpStatus.OK).end('Successfully');
+        res.status(HttpStatus.OK).end('Reset password is sent to your email');
       }
       res.status(HttpStatus.BAD_REQUEST).end('Failed');
     });
