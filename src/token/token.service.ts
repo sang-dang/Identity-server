@@ -1,26 +1,25 @@
-
-import { Model } from 'mongoose';
-import { Injectable, Inject } from '@nestjs/common';
-// import { AccessToken } from './interfaces/access-token.interface';
+import { Injectable } from '@nestjs/common';
 import { TokenDto } from './dto/create-cat.dto';
 import { InjectModel } from '@nestjs/mongoose';
-import { Token } from './token.model';
-import { ModelType } from 'typegoose';
+import { Model } from 'mongoose';
+import { AccessToken } from './interfaces/access-token.interface';
+// import { Token } from './token.model';
+// import { ModelType } from 'typegoose';
 
 @Injectable()
 export class TokenService {
   constructor(
-    @InjectModel(Token.modelName)
-    private readonly tokenRepo: ModelType<Token>,
+    @InjectModel('TokenRepo')
+    private readonly tokenRepo: Model<AccessToken>,
   ) {
   }
 
-  async create(createCatDto: TokenDto): Promise<Token> {
+  async create(createCatDto: TokenDto): Promise<AccessToken> {
     const createdCat = new this.tokenRepo(createCatDto);
     return await createdCat.save();
   }
 
-  async findAll(): Promise<Token[]> {
+  async findAll(): Promise<AccessToken[]> {
     return await this.tokenRepo.find().exec();
   }
 }

@@ -1,6 +1,6 @@
 import { Sequelize } from 'sequelize-typescript';
 import { ClientEntity } from './../client/client.entity';
-import { User } from './../user/user.entity';
+import { User, ResetPassword, AccessToken } from './../user/user.entity';
 import { Authorize, Credential } from '../authorize/authorize.entity';
 
 export const databaseProviders = [
@@ -16,7 +16,14 @@ export const databaseProviders = [
         password: 'root',
         database: 'nest',
       });
-      sequelize.addModels([Authorize, Credential, User, ClientEntity]);
+      sequelize.addModels([
+        Authorize,
+        Credential,
+        User,
+        ClientEntity,
+        ResetPassword,
+        AccessToken,
+      ]);
       await sequelize.sync();
       return sequelize;
     },

@@ -3,13 +3,23 @@ import { IsString, IsInt, Length, IsNotEmpty, IsEmail } from 'class-validator';
 
 export class UserRegister {
     @ApiModelProperty()
-    fullname: string;
+    customerId: string;
+    @ApiModelProperty()
+    lastName: string;
+    @ApiModelProperty()
+    firstName: string;
     @ApiModelProperty()
     email: string;
     @ApiModelProperty()
     password: string;
     @ApiModelProperty()
-    retypePassword: string;
+    rePassword: string;
+    @ApiModelProperty()
+    phoneNo: string;
+    @ApiModelProperty()
+    gender: string;
+    @ApiModelProperty()
+    dateOfBirth: Date;
 }
 
 export class PasswordChange {
